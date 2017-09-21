@@ -1,0 +1,42 @@
+function list_events {
+  local start_time="$1"
+  local time_length="$2"
+
+  khal list -df '' --format '{start-time} {title}' --notstarted "$start_time" "$time_length" | grep -vi 'No events'
+}
+
+function get_time {
+  date --date "$1" '+%H:%M'
+}
+
+function list_overdue {
+  list_events "$(get_time '15 minutes ago')" 15m
+}
+
+function list_almost_due {
+  list_events "$(get_time 'now')" 5m
+}
+
+function list_due_soon {
+  list_events "$(get_time '5 minutes')" 10m
+}
+
+function khal_prompt {
+  local event_notice="$(list_overdue)"
+  if [[ -n "$event_notice" ]]; then
+    echo "%K{red}%F{black}$event_notice%f%k "
+    return
+  fi
+
+  event_notice="$(list_almost_due)"
+  if [[ -n "$event_notice" ]]; then
+    echo "%K{yellow}%F{black}$event_notice%f%k "
+    return
+  fi
+
+  event_notice="$(list_due_soon)"
+  if [[ -n "$event_notice" ]]; then
+    echo "%F{yellow}$event_notice%f "
+    return
+  fi
+}

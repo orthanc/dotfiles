@@ -1,0 +1,88 @@
+
+
+# Enable command substitution so that we can get git-status into command prompt
+setopt PROMPT_SUBST
+
+PROMPT_COLOR_COMMAND_STATUS_START='%(?/%F{green}/%F{red})'
+
+# Function to produce the git status in the right format to be added to the PROMPT variable
+function prompt_git_info {
+  local git_branch_name="${$(git symbolic-ref HEAD 2>/dev/null || git rev-parse HEAD 2>/dev/null)##*/}"
+
+  if [[ -n "$git_branch_name" ]]; then
+    local git_status=$(git status --porcelain)
+    local git_root=$(git rev-parse --show-toplevel)
+    local git_root_name=$(basename "$git_root")
+
+
+    local git_branch_info=''
+    local git_dirty_status=''
+
+    if [[ -n "${git_status[(rf)D[UD]*]}" || -n "${git_status[(rf)A[UA]*]}" || -n "${git_status[(rf)U[DAU]*]}" ]]; then
+      # Conflicetd Statuses
+      git_branch_info="%K{red}%F{black}$git_branch_name%f%k"
+    elif [[ -n "$git_status" ]]; then
+      if [[ -n "${git_status[(rf)[MADRCU]*]}" ]]; then
+        # Staged Changes
+        git_dirty_status="$git_dirty_status%F{yellow}●%f"
+      fi
+      if [[ -n "${git_status[(rf)?[MD]*]}" ]]; then
+        # Unstaged Changes
+        git_dirty_status="$git_dirty_status%F{red}●%f"
+      fi
+      if [[ -n "${git_status[(rf)\?*]}" ]]; then
+        # Untracked Files
+        git_branch_info="%K{yellow}%F{black}$git_branch_name%f%k"
+      else
+        git_branch_info="%F{yellow}$git_branch_name%f"
+      fi
+      git_branch_info="$git_branch_info$git_dirty_status"
+    else
+      git_branch_info="%F{white}$git_branch_name%f"
+    fi
+
+    echo "[%F{cyan}$git_root_name%f%F{blue}@%f$git_branch_info]$(prompt_dir_info "$git_root" '')"
+    #echo "[%F{cyan}$git_root_name%f%F{blue}@%f$background_modifier%F{$git_branch_color}$git_branch_name%f$background_modifier_end]$(prompt_dir_info "$git_root" '')"
+  fi
+}
+
+function prompt_user_info {
+  local current_username="${$(whoami):#$(logname)}"
+  if [[ -n "$current_username" ]]; then
+    echo "($current_username) "
+  fi
+}
+
+function prompt_dir_info {
+  local current_dir="$(pwd)"
+  local base_dir=${1:-"$HOME"}
+  local base_marker=${2-'~'}
+
+  if [[ "$current_dir" = "${base_dir}" ]]; then
+    echo "$PROMPT_COLOR_COMMAND_STATUS_START${base_marker}"
+  else
+    echo "$PROMPT_COLOR_COMMAND_STATUS_START$(basename "$current_dir")"
+  fi
+}
+
+# Prompt
+# Servername (%m)  - cynan normally, red if root
+# Current Directory (%~) - green if previous command succeeded, red if failed
+PROMPT='%-25<..<%(!/%F{red}/%F{cyan})%m%f %(?/%F{green}/%F{red})%~%f$(git_branch_prompt) \$ '
+
+# Right Prompt:
+# Job count if any jobs
+# Time
+RPROMPT='%(1j/[%F{y}%j%f] /)${SSH_AUTH_SOCK+"%F{cyan}Ө%f "}$(cat ~/.khal_prompt_alert 2>/dev/null)%T'
+
+# Username if not edwardc, red if root, cyan otherwise
+# if GIT
+#. [root_dir@branch] - color indicates git status
+# last path segment - color indicates command status
+
+PROMPT_TRUNCATION='%-25<..<'
+PROMPT_USERNAME='%(!/%F{red}/%F{cyan})$(prompt_user_info)%f'
+PROMPT_GIT_INFO='$(prompt_git_info)'
+PROMPT_SIMPLE_DIR_INFO='$(prompt_dir_info)'
+PROMPT_DIR_INFO="\${$PROMPT_GIT_INFO:-\"$PROMPT_SIMPLE_DIR_INFO\"}"
+PROMPT="${PROMPT_TRUNCATION}${PROMPT_USERNAME}${PROMPT_DIR_INFO}\$%f "
