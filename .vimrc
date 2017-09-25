@@ -49,6 +49,7 @@ set listchars=tab:>.,trail:.,extends:#,nbsp:.
 " F2 switches to paste mode which disables auto-indent etc
 set pastetoggle=<F2>
 
+set spelllang=en
 
 "filetype plugin indent on
 filetype plugin on
@@ -71,4 +72,5 @@ autocmd filetype json set expandtab
 autocmd filetype json set tabstop=2
 autocmd filetype json set shiftwidth=2
 
-
+" Git Commit
+autocmd filetype gitcommit set spell
