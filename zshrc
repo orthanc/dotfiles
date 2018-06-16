@@ -39,3 +39,5 @@ export KEYTIMEOUT=1
 export EDITOR=vim
 
 . ~/.zsh_prompt
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
