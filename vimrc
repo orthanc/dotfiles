@@ -36,6 +36,7 @@ syntax on         " Enable Syntax Highlighting
 
 colorscheme desert
 
+set rtp+=~/.fzf
 
 set wildignore=*.swp,*.bak,*.pyc,*.class
 set title                " change the terminal's title
