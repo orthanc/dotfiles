@@ -75,3 +75,8 @@ autocmd filetype json set shiftwidth=2
 
 " Git Commit
 autocmd filetype gitcommit set spell
+
+" Javascript Settings
+autocmd filetype javascript set expandtab
+autocmd filetype javascript set tabstop=2
+autocmd filetype javascript set shiftwidth=2

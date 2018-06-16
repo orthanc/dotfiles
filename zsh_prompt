@@ -65,6 +65,12 @@ function prompt_dir_info {
   fi
 }
 
+function reboot_info {
+  if [[ -f /var/run/reboot-required ]]; then
+    echo "%F{red}●%f"
+  fi
+}
+
 # Prompt
 # Servername (%m)  - cynan normally, red if root
 # Current Directory (%~) - green if previous command succeeded, red if failed
@@ -73,7 +79,7 @@ PROMPT='%-25<..<%(!/%F{red}/%F{cyan})%m%f %(?/%F{green}/%F{red})%~%f$(git_branch
 # Right Prompt:
 # Job count if any jobs
 # Time
-RPROMPT='%(1j/[%F{y}%j%f] /)${SSH_AUTH_SOCK+"%F{cyan}Ө%f "}$(cat ~/.khal_prompt_alert 2>/dev/null)%T'
+RPROMPT='%(1j/[%F{y}%j%f] /)${SSH_AUTH_SOCK+"%F{cyan}Ө%f "}$(reboot_info)$(cat ~/.khal_prompt_alert 2>/dev/null)%T'
 
 # Username if not edwardc, red if root, cyan otherwise
 # if GIT
