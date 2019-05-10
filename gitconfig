@@ -1,0 +1,5 @@
+[user]
+	email = edc.open@gmail.com
+	name = Ed Costello
+[merge]
+	conflictstyle = diff3
