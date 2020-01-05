@@ -1,0 +1,11 @@
+Host *-initramfs
+  User root
+  Port 4748
+  ControlPath none
+
+Host *-decrypt
+  User root
+  Port 4748
+  ControlPath none
+  RequestTTY yes
+  RemoteCommand cryptroot-unlock

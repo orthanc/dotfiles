@@ -36,8 +36,6 @@ syntax on         " Enable Syntax Highlighting
 
 colorscheme desert
 
-set rtp+=~/.fzf
-
 set wildignore=*.swp,*.bak,*.pyc,*.class
 set title                " change the terminal's title
 set visualbell           " don't beep
@@ -52,6 +50,10 @@ set pastetoggle=<F2>
 
 set spelllang=en
 
+set expandtab
+set tabstop=2
+set shiftwidth=2
+
 "filetype plugin indent on
 filetype plugin on
 
@@ -63,21 +65,15 @@ autocmd filetype python set expandtab
 
 " YAML Settings
 autocmd BufNewFile,BufRead *.yaml.j2   set filetype=yaml
-autocmd filetype yaml set expandtab
-autocmd filetype yaml set tabstop=2
-autocmd filetype yaml set shiftwidth=2
 
 " JSON Settings
 autocmd BufNewFile,BufRead *.json.j2   set filetype=json
-autocmd filetype json set expandtab
-autocmd filetype json set tabstop=2
-autocmd filetype json set shiftwidth=2
 
 " Git Commit
 autocmd filetype gitcommit set spell
 
+" Markdown
+autocmd filetype markdown set spell
+
 " Javascript Settings
 autocmd BufNewFile,BufRead *.ts   set filetype=javascript
-autocmd filetype javascript set expandtab
-autocmd filetype javascript set tabstop=2
-autocmd filetype javascript set shiftwidth=2
