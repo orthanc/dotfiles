@@ -1,0 +1,4 @@
+Host *-initramfs
+  User root
+  Port 4748
+  ControlPath none

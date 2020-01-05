@@ -1,0 +1,4 @@
+Host *-tmux
+  RemoteCommand = tmux new -As main
+  RequestTTY yes
+  HostName lapstation
